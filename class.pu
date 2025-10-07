@@ -1,0 +1,60 @@
+@startuml
+skin rose
+skinparam backgroundColor #EEEBDC
+left to right direction
+
+class User {
+    - Id
+    + Email
+    + PasswordHash
+    + NotifyOnExpiration
+    + NotifyOnDeadline
+    + NotifyOnThreshold
+    + NotifyOnInsufficientResources
+
+    + Register()
+    + Login()
+    + Logout()
+    + ChangePassword()
+
+    + toggleNotifyOnExpiration()
+    + toggleNotifyOnDeadline()
+    + toggleNotifyOnThreshold()
+    + toggleNotifyOnInsufficientResources()
+}
+
+class Catalog {
+    - Id
+    + ItemTypes
+
+    + AddItemType(ItemType)
+    + RemoveItemType(ItemType)
+    + QueryItemType(Query)
+}
+
+class ItemType {
+    - Id
+    + Name
+    + Description
+    + Category
+    + BaseMeasurementUnit
+    + DefaultQuantity
+    + Width
+    + Height
+    + Depth
+    + PictureName
+    + PictureSource
+
+    + UpdateName(NewName)
+    + UpdateDescription(NewDescription)
+    + UpdateCategory(NewCategory)
+    + UpdateBaseMeasurementUnit(NewUnit)
+    + UpdateDefaultQuantity(NewQuantity)
+    + UpdateDimensions(NewDimensions)
+    + UpdatePicture(NewPicture)
+}
+
+User *-- Catalog
+Catalog o-- ItemType
+
+@enduml
