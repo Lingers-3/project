@@ -1,5 +1,7 @@
 # Project
 
-[Planka](https://planka.linerds.us/)
-
+# Class Diagram
 ![class-diagram](./class.svg)
+
+# Object Diagram
+![object-diagram](./object.svg)

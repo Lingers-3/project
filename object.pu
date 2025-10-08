@@ -1,0 +1,92 @@
+@startuml
+skin rose
+skinparam backgroundColor #EEEBDC
+/' left to right direction '/
+
+object "John: User" as UserJohn{
+    Id = 0
+    PasswordHash = whatever
+    NotifyOnExpiration = True
+    NotifyOnDeadline = True
+    NotifyOnThreshold = True
+    NotifyOnInsufficientResources = True
+}
+object "Jane: User" as UserJane {
+    Id = 1
+    PasswordHash = whatever
+    NotifyOnExpiration = True
+    NotifyOnDeadline = False
+    NotifyOnThreshold = False
+    NotifyOnInsufficientResources = True
+}
+
+object "John's Catalog: Catalog" as JohnCatalog {
+    Id = 0
+}
+object "Jane's Catalog: Catalog" as JaneCatalog {
+    Id = 1
+}
+
+object "Scissors: ItemType" as Scissors {
+    Id = 0
+    Name = "Scissors"
+    Description = "amazing scissors"
+    Category = "instruments"
+    BaseMeasurementUnit = "piece"
+    DefaultQuantity = 1
+    Width = SKIP?
+    Height = SKIP?
+    Depth = SKIP?
+    PictureName = "scissors-picture"
+    PictureSource = "scissors-picture.png"
+}
+object "Needles: ItemType" as Needles {
+    Id = 1
+    Name = "Needles"
+    Description = "amazing needles"
+    Category = "instruments"
+    BaseMeasurementUnit = "pack"
+    DefaultQuantity = 10
+    Width = SKIP?
+    Height = SKIP?
+    Depth = SKIP?
+    PictureName = "needles-picture"
+    PictureSource = "needles-picture.png"
+}
+object "Thread: ItemType" as Thread {
+    Id = 2
+    Name = "Thread"
+    Description = "amazing thread"
+    Category = "materials"
+    BaseMeasurementUnit = "meter"
+    DefaultQuantity = 100
+    Width = SKIP?
+    Height = SKIP?
+    Depth = SKIP?
+    PictureName = "thread-picture"
+    PictureSource = "thread-picture.png"
+}
+object "Cloth: ItemType" as Cloth {
+    Id = 3
+    Name = "Cloth"
+    Description = "amazing cloth"
+    Category = "materials"
+    BaseMeasurementUnit = "Roll"
+    DefaultQuantity = 1
+    Width = 100?
+    Height = 100?
+    Depth = 1?
+    PictureName = "cloth-picture"
+    PictureSource = "cloth-picture.png"
+}
+
+UserJohn *-- JohnCatalog
+UserJane *-- JaneCatalog
+
+JohnCatalog o-- Scissors
+JohnCatalog o-- Cloth
+
+JaneCatalog o-- Needles
+JaneCatalog o-- Thread
+
+@enduml
