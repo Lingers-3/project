@@ -7,4 +7,4 @@
 ![object-diagram](./diagrams/object.svg)
 
 # ER Diagram
-![er-diagram](./er.svg)
+![er-diagram](./diagrams/er.svg)
