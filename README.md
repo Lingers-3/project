@@ -5,3 +5,6 @@
 
 # Object Diagram
 ![object-diagram](./object.svg)
+
+# ER Diagram
+![er-diagram](./er.svg)
