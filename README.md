@@ -8,3 +8,6 @@
 
 # ER Diagram
 ![er-diagram](./diagrams/er.svg)
+
+# Logical-Schema Diagram
+![logical-schema](./diagrams/logical-schema.svg)

@@ -1,0 +1,53 @@
+@startuml
+skin rose
+skinparam backgroundColor #EEEBDC
+hide circle
+/' skinparam linetype ortho '/
+left to right direction
+
+entity User {
+  Id : serial <<PK>>
+  --
+  Auth0ID : varchar(255)
+  Email : varchar(255)
+  NotifyOnExpiration : boolean
+  NotifyOnDeadline : boolean
+  NotifyOnThreshold : boolean
+  NotifyOnInsufficientResources : boolean
+  --
+  CreatedAt : Time
+  UpdatedAt : Time
+}
+
+entity ItemType {
+  Id : serial <<PK>>
+  --
+  UserId : serial <<FK>>
+  Picture : serial <<FK>>
+  --
+  Name : varchar(255)
+  Description : varchar(512)
+  Category : varchar(255)
+  BaseMeasurementUnit : varchar(255)
+  DefaultQuantity : float
+  Width : float
+  Height : float
+  Depth : float
+  --
+  CreatedAt : Time
+  UpdatedAt : Time
+}
+
+entity Picture {
+  Id : serial <<PK>>
+  --
+  BlobId : uuid
+  Filetype: varchar(8)
+  --
+  CreatedAt : Time
+  UpdatedAt : Time
+}
+
+User::Id ||--o{ ItemType::UserId
+ItemType::Picture ||--|| Picture::Id
+@enduml
