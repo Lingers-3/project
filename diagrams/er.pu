@@ -3,49 +3,40 @@ skin rose
 skinparam backgroundColor #EEEBDC
 hide circle
 skinparam linetype ortho
-/' left to right direction '/
+left to right direction
 
 entity User {
   Id : serial <<PK>>
   --
-  Auth0ID : varchar(255)
-  Email : varchar(255)
-  NotifyOnExpiration : boolean
-  NotifyOnDeadline : boolean
-  NotifyOnThreshold : boolean
-  NotifyOnInsufficientResources : boolean
+  Auth0ID
+  Email
+  NotifyOnExpiration
+  NotifyOnDeadline
+  NotifyOnThreshold
+  NotifyOnInsufficientResources
 }
 
-entity Catalog {
-  Id : serial <<PK>>
-  --
-  UserId : serial <<FK>>
-}
 
 entity ItemType {
   Id : serial <<PK>>
   --
-  CatalogId : serial <<FK>>
-  Picture : serial <<FK>>
-  --
-  Name : varchar(255)
-  Description : varchar(512)
-  Category : varchar(255)
-  BaseMeasurementUnit : varchar(255)
-  DefaultQuantity : float
-  Width : float
-  Height : float
-  Depth : float
+  Name
+  Description
+  Category
+  BaseMeasurementUnit
+  DefaultQuantity
+  Width
+  Height
+  Depth
 }
 
 entity Picture {
   Id : serial <<PK>>
   --
-  BlobId : uuid
-  Filetype: varchar(8)
+  BlobId
+  Filetyp
 }
 
-User    ||-d-|| Catalog
-Catalog ||-r-o{ ItemType
-ItemType ||-u-|| Picture
+User ||--o{ ItemType
+ItemType ||--|| Picture
 @enduml
