@@ -1,9 +1,0 @@
-[submodule "mobile"]
-	path = mobile
-	url = git@github.com:Lingers-3/mobile.git
-[submodule "frontend"]
-	path = frontend
-	url = git@github.com:Lingers-3/frontend.git
-[submodule "backend"]
-	path = backend
-	url = git@github.com:Lingers-3/backend.git
