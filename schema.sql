@@ -12,20 +12,6 @@ CREATE TABLE "Users" (
     "DeletedAt" TIMESTAMPTZ
 );
 
-CREATE TABLE "Catalogs" (
-    "Id" SERIAL PRIMARY KEY,
-    "UserId" INTEGER NOT NULL UNIQUE,
-
-    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "UpdatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "DeletedAt" TIMESTAMPTZ,
-
-    CONSTRAINT "FK_Catalog_User"
-        FOREIGN KEY ("UserId")
-        REFERENCES "Users"("Id")
-        ON DELETE CASCADE
-);
-
 CREATE TABLE "Pictures" (
     "Id" SERIAL PRIMARY KEY,
     "BlobId" UUID NOT NULL,
@@ -38,7 +24,7 @@ CREATE TABLE "Pictures" (
 CREATE TABLE "ItemTypes" (
     "Id" SERIAL PRIMARY KEY,
 
-    "CatalogId" INTEGER NOT NULL,
+    "UserId" INTEGER NOT NULL,
     "PictureId" INTEGER NOT NULL UNIQUE,
 
     "Name" VARCHAR(255) NOT NULL,
@@ -54,9 +40,9 @@ CREATE TABLE "ItemTypes" (
     "UpdatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     "DeletedAt" TIMESTAMPTZ,
 
-    CONSTRAINT "FK_ItemType_Catalog"
-        FOREIGN KEY ("CatalogId")
-        REFERENCES "Catalogs"("Id")
+    CONSTRAINT "FK_ItemType_User"
+        FOREIGN KEY ("UserId")
+        REFERENCES "Users"("Id")
         ON DELETE CASCADE,
 
     CONSTRAINT "FK_ItemType_Picture"
@@ -77,13 +63,6 @@ CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON "Users"
 FOR EACH ROW
 EXECUTE FUNCTION trigger_set_timestamp();
-
-
-CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON "Catalogs"
-FOR EACH ROW
-EXECUTE FUNCTION trigger_set_timestamp();
-
 
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON "ItemTypes"
