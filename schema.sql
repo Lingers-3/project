@@ -1,53 +1,54 @@
 CREATE TABLE "Users" (
-    "Id" SERIAL PRIMARY KEY,
-    "Auth0ID" VARCHAR(255) NOT NULL UNIQUE,
-    "Email" VARCHAR(255) NOT NULL UNIQUE,
-    "NotifyOnExpiration" BOOLEAN NOT NULL DEFAULT TRUE,
-    "NotifyOnDeadline" BOOLEAN NOT NULL DEFAULT TRUE,
-    "NotifyOnThreshold" BOOLEAN NOT NULL DEFAULT TRUE,
-    "NotifyOnInsufficientResources" BOOLEAN NOT NULL DEFAULT TRUE,
+    "id" SERIAL PRIMARY KEY,
+    "auth0_id" VARCHAR(256) NOT NULL UNIQUE,
+    "email" VARCHAR(256) NOT NULL UNIQUE,
+    "notify_on_expiration" BOOLEAN NOT NULL DEFAULT TRUE,
+    "notify_on_deadline" BOOLEAN NOT NULL DEFAULT TRUE,
+    "notify_on_threshold" BOOLEAN NOT NULL DEFAULT TRUE,
+    "notify_on_insufficient_resources" BOOLEAN NOT NULL DEFAULT TRUE,
 
-    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "UpdatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "DeletedAt" TIMESTAMPTZ
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "deleted_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "Pictures" (
-    "Id" SERIAL PRIMARY KEY,
-    "BlobId" UUID NOT NULL,
-    "Filetype" VARCHAR(8) NOT NULL,
+    "id" SERIAL PRIMARY KEY,
+    "blob_id" UUID NOT NULL,
+    "filetype" VARCHAR(8) NOT NULL,
 
-    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "UpdatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE "ItemTypes" (
-    "Id" SERIAL PRIMARY KEY,
+    "id" SERIAL PRIMARY KEY,
 
-    "UserId" INTEGER NOT NULL,
-    "PictureId" INTEGER NOT NULL UNIQUE,
+    "user_id" INTEGER NOT NULL,
+    -- TODO(noatu): Is it optional? Should we remove UNIQUE to have a default image?
+    "picture_id" INTEGER NOT NULL UNIQUE,
 
-    "Name" VARCHAR(255) NOT NULL,
-    "Description" VARCHAR(512),
-    "Category" VARCHAR(255),
-    "BaseMeasurementUnit" VARCHAR(255) NOT NULL,
-    "DefaultQuantity" REAL NOT NULL DEFAULT 1.0,
-    "Width" REAL,
-    "Height" REAL,
-    "Depth" REAL,
+    "name" VARCHAR(256) NOT NULL,
+    "description" VARCHAR(512),
+    "category" VARCHAR(256),
+    "base_measurement_unit" VARCHAR(256) NOT NULL,
+    "default_quantity" REAL NOT NULL DEFAULT 1.0,
+    "width" REAL,
+    "height" REAL,
+    "depth" REAL,
 
-    "CreatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "UpdatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    "DeletedAt" TIMESTAMPTZ,
+    "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    "deleted_at" TIMESTAMPTZ,
 
     CONSTRAINT "FK_ItemType_User"
-        FOREIGN KEY ("UserId")
-        REFERENCES "Users"("Id")
+        FOREIGN KEY ("user_id")
+        REFERENCES "Users"("id")
         ON DELETE CASCADE,
 
     CONSTRAINT "FK_ItemType_Picture"
-        FOREIGN KEY ("PictureId")
-        REFERENCES "Pictures"("Id")
+        FOREIGN KEY ("picture_id")
+        REFERENCES "Pictures"("id")
         ON DELETE CASCADE
 );
 
