@@ -25,8 +25,7 @@ CREATE TABLE "ItemTypes" (
     "id" SERIAL PRIMARY KEY,
 
     "user_id" INTEGER NOT NULL,
-    -- TODO(noatu): Is it optional? Should we remove UNIQUE to have a default image?
-    "picture_id" INTEGER NOT NULL UNIQUE,
+    "picture_id" INTEGER,
 
     "name" VARCHAR(256) NOT NULL,
     "description" VARCHAR(512),
