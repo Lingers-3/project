@@ -62,9 +62,9 @@ CREATE TABLE Items (
 
     quantity REAL NOT NULL DEFAULT 0,
     threshold REAL, -- for alerts
-    expires_at TIMESTAMPZ,
+    expires_at TIMESTAMPTZ,
     description VARCHAR(512),
-    comsumed_policy VisibilityPolicy NOT NULL DEFAULT 'show',
+    consumed_policy ConsumedVisibilityPolicy NOT NULL DEFAULT 'show',
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -73,10 +73,28 @@ CREATE TABLE Items (
     CONSTRAINT FK_ItemType_Item
         FOREIGN KEY (item_type_id)
         REFERENCES ItemTypes(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT
 );
 
-CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+-- Turn ItemType DELETE into deleted_at UPDATE if there are Items attached
+CREATE OR REPLACE FUNCTION handle_item_type_soft_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM Items WHERE item_type_id = OLD.id AND deleted_at IS NULL) THEN
+        UPDATE ItemTypes SET deleted_at = NOW() WHERE id = OLD.id;
+        RETURN NULL; -- cancels the operation
+    END IF;
+
+    RETURN OLD; -- hard DELETE
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_soft_delete_item_type
+BEFORE DELETE ON ItemTypes
+FOR EACH ROW
+EXECUTE FUNCTION handle_item_type_soft_delete();
+
+CREATE OR REPLACE FUNCTION set_updated_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
   NEW.updated_at = NOW();
@@ -84,17 +102,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER set_timestamp
+CREATE TRIGGER trigger_set_updated_timestamp
 BEFORE UPDATE ON Users
 FOR EACH ROW
-EXECUTE FUNCTION trigger_set_timestamp();
+EXECUTE FUNCTION set_updated_timestamp();
 
-CREATE TRIGGER set_timestamp
+CREATE TRIGGER trigger_set_updated_timestamp
 BEFORE UPDATE ON ItemTypes
 FOR EACH ROW
-EXECUTE FUNCTION trigger_set_timestamp();
+EXECUTE FUNCTION set_updated_timestamp();
 
-CREATE TRIGGER set_timestamp
+CREATE TRIGGER trigger_set_updated_timestamp
 BEFORE UPDATE ON Items
 FOR EACH ROW
-EXECUTE FUNCTION trigger_set_timestamp();
+EXECUTE FUNCTION set_updated_timestamp();
