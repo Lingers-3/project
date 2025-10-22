@@ -51,6 +51,31 @@ CREATE TABLE ItemTypes (
         ON DELETE CASCADE
 );
 
+-- hide when consumed, show when consumed, always visible
+CREATE TYPE ConsumedVisibilityPolicy AS ENUM ('hide', 'show', 'visible');
+CREATE TABLE Items (
+    id SERIAL PRIMARY KEY,
+
+    item_type_id INTEGER NOT NULL,
+    -- display_measurement_unit_id INTEGER NOT NULL,
+    -- stock_fill_measurement_unit_id INTEGER NOT NULL,
+
+    quantity REAL NOT NULL DEFAULT 0,
+    threshold REAL, -- for alerts
+    expires_at TIMESTAMPZ,
+    description VARCHAR(512),
+    comsumed_policy VisibilityPolicy NOT NULL DEFAULT 'show',
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    deleted_at TIMESTAMPTZ,
+
+    CONSTRAINT FK_ItemType_Item
+        FOREIGN KEY (item_type_id)
+        REFERENCES ItemTypes(id)
+        ON DELETE CASCADE,
+);
+
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -66,5 +91,10 @@ EXECUTE FUNCTION trigger_set_timestamp();
 
 CREATE TRIGGER set_timestamp
 BEFORE UPDATE ON ItemTypes
+FOR EACH ROW
+EXECUTE FUNCTION trigger_set_timestamp();
+
+CREATE TRIGGER set_timestamp
+BEFORE UPDATE ON Items
 FOR EACH ROW
 EXECUTE FUNCTION trigger_set_timestamp();
