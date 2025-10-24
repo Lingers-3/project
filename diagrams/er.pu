@@ -2,32 +2,40 @@
 skin rose
 skinparam backgroundColor #EEEBDC
 hide circle
-skinparam linetype ortho
-left to right direction
+/' skinparam linetype ortho '/
+/' left to right direction '/
 
 entity User {
   Id : serial <<PK>>
   --
   Auth0ID
-  Email
   NotifyOnExpiration
   NotifyOnDeadline
   NotifyOnThreshold
   NotifyOnInsufficientResources
 }
 
-
 entity ItemType {
   Id : serial <<PK>>
   --
   Name
   Description
-  Category
   BaseMeasurementUnit
+  DefaultDisplayMeasurementUnit
   DefaultQuantity
-  Width
-  Height
-  Depth
+  ShortageTrashold
+  PictureName
+  PictureSource
+}
+
+entity Item {
+  Id : serial <<PK>>
+  --
+  Description
+  Quantity
+  ExpirationDate
+  DisplayMeasurementUnit
+  PurchasePrice
 }
 
 entity Picture {
@@ -37,6 +45,21 @@ entity Picture {
   Filetyp
 }
 
-User ||--o{ ItemType
+entity Tag {
+  Id : serial <<PK>>
+  --
+  Name
+  Color
+}
+
+User ||-d-o{ ItemType
+User ||-d-o{ Item
+
+ItemType }o-d-o{ Tag
+Item }o-d-o{ Tag
+
+Item }o-r-|| ItemType
+
 ItemType ||--|| Picture
+
 @enduml

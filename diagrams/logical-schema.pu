@@ -3,20 +3,19 @@ skin rose
 skinparam backgroundColor #EEEBDC
 hide circle
 /' skinparam linetype ortho '/
-left to right direction
+/' left to right direction '/
 
 entity User {
   Id : serial <<PK>>
   --
   Auth0ID : varchar(255)
-  Email : varchar(255)
   NotifyOnExpiration : boolean
   NotifyOnDeadline : boolean
   NotifyOnThreshold : boolean
   NotifyOnInsufficientResources : boolean
   --
-  CreatedAt : Time
-  UpdatedAt : Time
+  CreatedAt : DateTime
+  UpdatedAt : DateTime
 }
 
 entity ItemType {
@@ -27,15 +26,14 @@ entity ItemType {
   --
   Name : varchar(255)
   Description : varchar(512)
-  Category : varchar(255)
   BaseMeasurementUnit : varchar(255)
+  DefaultDisplayMeasurementUnit : varchar (255)
   DefaultQuantity : float
-  Width : float
-  Height : float
-  Depth : float
+  ShortageTrashold : float
   --
-  CreatedAt : Time
-  UpdatedAt : Time
+  CreatedAt : DateTime
+  UpdatedAt : DateTime
+  DeleatedAt : DateTime
 }
 
 entity Picture {
@@ -44,10 +42,64 @@ entity Picture {
   BlobId : uuid
   Filetype: varchar(8)
   --
-  CreatedAt : Time
-  UpdatedAt : Time
+  CreatedAt : DateTime
+  UpdatedAt : DateTime
+  DeleatedAt : DateTime
 }
 
-User::Id ||--o{ ItemType::UserId
-ItemType::Picture ||--|| Picture::Id
+entity Item {
+  Id : serial <<PK>>
+  --
+  UserId : serial <<FK>>
+  ItemTypeId : serial <<FK>>
+  --
+  Description : varchar(512)
+  Quantity : float
+  ExpirationDate : DateTime
+  DisplayMeasurementUnit : varchar (255)
+  PurchasePrice : float
+  --
+  CreatedAt : DateTime
+  UpdatedAt : DateTime
+  DeleatedAt : DateTime
+}
+
+entity ItemToTag {
+  Id : serial <<PK>>
+  --
+  ItemId : serial <<FK>> <<PK>>
+  TagId : serial <<FK>> <<PK>>
+}
+
+entity ItemTypeToTag {
+  Id : serial <<PK>>
+  --
+  ItemTypeId : serial <<FK>> <<PK>>
+  TagId : serial <<FK>> <<PK>>
+}
+
+entity Tag {
+  Id : serial <<PK>>
+  --
+  UserId : serial <<FK>>
+  --
+  Name : varchar(255)
+  Color : varchar (255)
+  --
+  CreatedAt : DateTime
+  UpdatedAt : DateTime
+  DeleatedAt : DateTime
+}
+
+User ||-d-o{ ItemType
+User ||-d-o{ Item
+ItemType ||-l-|| Picture
+ItemType ||--r--o{ Item
+
+Item ||-d-o{ ItemToTag
+Tag ||-r-o{ ItemToTag
+
+ItemType ||-d-o{ ItemTypeToTag
+Tag ||-l-o{ ItemTypeToTag
+
 @enduml

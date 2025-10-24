@@ -2,11 +2,10 @@
 skin rose
 skinparam backgroundColor #EEEBDC
 left to right direction
+skinparam linetype ortho
 
 class User {
     - Id
-    + Email
-    + PasswordHash
     + NotifyOnExpiration
     + NotifyOnDeadline
     + NotifyOnThreshold
@@ -23,6 +22,15 @@ class User {
     + toggleNotifyOnInsufficientResources()
 }
 
+class Tag {
+    - Id
+    + Name
+    + Color
+
+    + UpdateName(NewName)
+    + UpdateColor(NewColor)
+}
+
 class Catalog {
     - Id
     + ItemTypes
@@ -36,25 +44,60 @@ class ItemType {
     - Id
     + Name
     + Description
-    + Category
     + BaseMeasurementUnit
+    + DefaultDisplayMeasurementUnit
     + DefaultQuantity
-    + Width
-    + Height
-    + Depth
+    + ShortageTrashold
     + PictureName
     + PictureSource
+    + Tags
 
     + UpdateName(NewName)
     + UpdateDescription(NewDescription)
-    + UpdateCategory(NewCategory)
     + UpdateBaseMeasurementUnit(NewUnit)
+    + UpdateDefaultDisplayMeasurementUnit(NewUnit)
     + UpdateDefaultQuantity(NewQuantity)
-    + UpdateDimensions(NewDimensions)
+    + UpdateShortageTrashold(NewTrashold)
     + UpdatePicture(NewPicture)
+    + AddTag(Tag)
+    + RemoveTag(Tag)
 }
 
-User *-- Catalog
+class Inventory {
+    - Id
+    + Items
+
+    + AddItem(Item)
+    + RemoveItem(Item)
+    + QueryItem(Query)
+}
+
+class Item {
+    - Id
+    + ItemType
+    + Description
+    + Quantity
+    + ExpirationDate
+    + DisplayMeasurementUnit
+    + PurchasePrice
+    + Tags
+
+    + UpdateDescription(NewDescription)
+    + UpdateQuantity(NewQuantity)
+    + UpdateExpirationDate(NewDate)
+    + UpdateDisplayMeasurementUnit(NewUnit)
+    + UpdatePurchasePrice(PurchasePrice)
+    + AddTag(Tag)
+    + RemoveTag(Tag)
+}
+
+User *-l- Catalog
+User *-r- Inventory
+
 Catalog o-- ItemType
+Inventory o-- Item
+
+ItemType -r- Tag
+Item -l- Tag
 
 @enduml

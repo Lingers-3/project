@@ -2,10 +2,10 @@
 skin rose
 skinparam backgroundColor #EEEBDC
 /' left to right direction '/
+/' skinparam linetype ortho '/
 
-object "John: User" as UserJohn{
+object "John: User" as UserJohn {
     Id = 0
-    PasswordHash = whatever
     NotifyOnExpiration = True
     NotifyOnDeadline = True
     NotifyOnThreshold = True
@@ -13,7 +13,6 @@ object "John: User" as UserJohn{
 }
 object "Jane: User" as UserJane {
     Id = 1
-    PasswordHash = whatever
     NotifyOnExpiration = True
     NotifyOnDeadline = False
     NotifyOnThreshold = False
@@ -27,66 +26,76 @@ object "Jane's Catalog: Catalog" as JaneCatalog {
     Id = 1
 }
 
+object "John's Inventory: Inventory" as JohnInventory {
+    Id = 0
+}
+object "Jane's Inventory: Inventory" as JaneInventory {
+    Id = 1
+}
+
+object "Tools: Tag" as TagTools {
+    Id = 100
+    Name = "Tools"
+    Color = "Red"
+}
+
 object "Scissors: ItemType" as Scissors {
     Id = 0
     Name = "Scissors"
     Description = "amazing scissors"
-    Category = "instruments"
     BaseMeasurementUnit = "piece"
+    DefaultDisplayMeasurementUnit = "piece"
     DefaultQuantity = 1
-    Width = SKIP?
-    Height = SKIP?
-    Depth = SKIP?
+    ShortageTrashold = 1
     PictureName = "scissors-picture"
     PictureSource = "scissors-picture.png"
 }
+
 object "Needles: ItemType" as Needles {
     Id = 1
     Name = "Needles"
     Description = "amazing needles"
-    Category = "instruments"
     BaseMeasurementUnit = "pack"
+    DefaultDisplayMeasurementUnit = "pack"
     DefaultQuantity = 10
-    Width = SKIP?
-    Height = SKIP?
-    Depth = SKIP?
+    ShortageTrashold = 5
     PictureName = "needles-picture"
     PictureSource = "needles-picture.png"
 }
-object "Thread: ItemType" as Thread {
-    Id = 2
-    Name = "Thread"
-    Description = "amazing thread"
-    Category = "materials"
-    BaseMeasurementUnit = "meter"
-    DefaultQuantity = 100
-    Width = SKIP?
-    Height = SKIP?
-    Depth = SKIP?
-    PictureName = "thread-picture"
-    PictureSource = "thread-picture.png"
-}
-object "Cloth: ItemType" as Cloth {
-    Id = 3
-    Name = "Cloth"
-    Description = "amazing cloth"
-    Category = "materials"
-    BaseMeasurementUnit = "Roll"
-    DefaultQuantity = 1
-    Width = 100?
-    Height = 100?
-    Depth = 1?
-    PictureName = "cloth-picture"
-    PictureSource = "cloth-picture.png"
+
+object "Big Scissors: Item" as BigScissors {
+    Id = 1000
+    Description = "My big red scissors"
+    Quantity = 1
+    ExpirationDate = null
+    DisplayMeasurementUnit = "piece"
+    PurchasePrice = 15.99
 }
 
-UserJohn *-- JohnCatalog
-UserJane *-- JaneCatalog
+object "Steel Needles: Item" as SteelNeedles {
+    Id = 1001
+    Description = "Amazing steel needles"
+    Quantity = 1
+    ExpirationDate = null
+    DisplayMeasurementUnit = "pack"
+    PurchasePrice = 4.99
+}
 
-JohnCatalog o-- Scissors
-JohnCatalog o-- Cloth
+UserJohn *--d-- JohnCatalog
+UserJohn *-r- JohnInventory
+JohnCatalog o-r- Scissors
+JohnInventory o-- BigScissors
+BigScissors ..> Scissors
 
-JaneCatalog o-- Needles
-JaneCatalog o-- Thread
+UserJane *--d-- JaneCatalog
+UserJane *-l- JaneInventory
+JaneCatalog o-l- Needles
+JaneInventory o-- SteelNeedles
+SteelNeedles ..> Needles
+
+TagTools -d- Scissors
+TagTools -u- BigScissors
+TagTools -d- Needles
+TagTools -u- SteelNeedles
 
 @enduml
