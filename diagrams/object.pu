@@ -81,17 +81,17 @@ object "Steel Needles: Item" as SteelNeedles {
     PurchasePrice = 4.99
 }
 
-UserJohn *--d-- JohnCatalog
-UserJohn *-r- JohnInventory
-JohnCatalog o-r- Scissors
-JohnInventory o-- BigScissors
-BigScissors ..> Scissors
+UserJohn --d-- JohnCatalog
+UserJohn -r- JohnInventory
+JohnCatalog -r- Scissors
+JohnInventory -- BigScissors
+BigScissors --> Scissors
 
-UserJane *--d-- JaneCatalog
-UserJane *-l- JaneInventory
-JaneCatalog o-l- Needles
-JaneInventory o-- SteelNeedles
-SteelNeedles ..> Needles
+UserJane --d-- JaneCatalog
+UserJane -l- JaneInventory
+JaneCatalog -l- Needles
+JaneInventory -- SteelNeedles
+SteelNeedles --> Needles
 
 TagTools -d- Scissors
 TagTools -u- BigScissors

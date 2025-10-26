@@ -94,10 +94,12 @@ class Item {
 User *-l- Catalog
 User *-r- Inventory
 
-Catalog o-- ItemType
-Inventory o-- Item
+Catalog *-- ItemType
+Inventory *-- Item
 
 ItemType -r- Tag
 Item -l- Tag
+
+Item -l-* ItemType
 
 @enduml
