@@ -50,7 +50,6 @@ entity Picture {
 entity Item {
   Id : serial <<PK>>
   --
-  UserId : serial <<FK>>
   ItemTypeId : serial <<FK>>
   --
   Description : varchar(512)
@@ -92,14 +91,14 @@ entity Tag {
 }
 
 User ||-d-o{ ItemType
-User ||-d-o{ Item
+User ||-d-o{ Tag
 ItemType ||-l-|| Picture
-ItemType ||--r--o{ Item
+ItemType ||-d-o{ Item
 
-Item ||-d-o{ ItemToTag
-Tag ||-r-o{ ItemToTag
+Item ||-r-o{ ItemToTag
+Tag ||-d-o{ ItemToTag
 
-ItemType ||-d-o{ ItemTypeToTag
+ItemType ||-r-o{ ItemTypeToTag
 Tag ||-l-o{ ItemTypeToTag
 
 @enduml
